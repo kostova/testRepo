@@ -509,6 +509,12 @@
                             <goals>
                                 <goal>jmeter</goal>
                             </goals>
+                            <configuration>
+                                <testFilesIncluded>
+                                    <jMeterTestFile>SIT.jmx</jMeterTestFile>
+                                    <jMeterTestFile>UAT.jmx</jMeterTestFile>
+                                </testFilesIncluded>
+                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
