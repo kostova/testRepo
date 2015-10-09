@@ -514,6 +514,9 @@
                                     <jMeterTestFile>SIT.jmx</jMeterTestFile>
                                     <jMeterTestFile>UAT.jmx</jMeterTestFile>
                                 </testFilesIncluded>
+                                <testResultsTimestamp>false</testResultsTimestamp>
+                                <appendResultsTimestamp>true</appendResultsTimestamp>
+                                <resultsFileNameDateFormat>MMMM, yyyy</resultsFileNameDateFormat>
                             </configuration>
                         </execution>
                     </executions>
