@@ -224,7 +224,7 @@
               <threadCounts>true</threadCounts>
             </value>
           </objProp>
-          <stringProp name="filename">D:\Jmeter\testRepo\testRepo\src\test\resources\TelerikSitBlogs.jtl</stringProp>
+          <stringProp name="filename">D:\Jmeter\testRepo\testRepo\src\test\resources\TelerikUatBlogs.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
       </hashTree>
