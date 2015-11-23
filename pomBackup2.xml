@@ -25,6 +25,29 @@
         </license>
     </licenses>
 
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/Ronnie76er/jmeter-maven-plugin/issues</url>
+    </issueManagement>
+
+    <ciManagement>
+        <system>Teamcity</system>
+        <url>http://build.lazerycode.com</url>
+    </ciManagement>
+
+    <mailingLists>
+        <mailingList>
+            <name>JMeter Maven Plugin Users</name>
+            <post>maven-jmeter-plugin-users@googlegroups.com</post>
+            <archive>https://groups.google.com/forum/?fromgroups#!forum/maven-jmeter-plugin-users</archive>
+        </mailingList>
+        <mailingList>
+            <name>JMeter Maven Plugin Devs</name>
+            <post>maven-jmeter-plugin-devs@googlegroups.com</post>
+            <archive>https://groups.google.com/forum/?fromgroups#!forum/maven-jmeter-plugin-devs</archive>
+        </mailingList>
+    </mailingLists>
+
     <scm>
         <connection>scm:git:git@github.com:Ronnie76er/jmeter-maven-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:Ronnie76er/jmeter-maven-plugin.git</developerConnection>
@@ -365,15 +388,41 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.1</version>
                     <configuration>
-                        <source>1.6</source>
-                        <target>1.6</target>
+                        <fork>true</fork>
+                        <source>1.8</source>
+                        <target>1.8</target>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-plugin-plugin</artifactId>
+                    <version>3.2</version>
+                    <configuration>
+                        <!-- TODO: workaround for  http://jira.codehaus.org/browse/MNG-5346 -->
+                        <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>mojo-descriptor</id>
+                            <goals>
+                                <goal>descriptor</goal>
+                            </goals>
+                        </execution>
+                        <!-- if you want to generate help goal -->
+                        <execution>
+                            <id>help-goal</id>
+                            <goals>
+                                <goal>helpmojo</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                  <plugin>
                     <groupId>com.lazerycode.jmeter</groupId>
@@ -386,9 +435,74 @@
                             <goals>
                                 <goal>jmeter</goal>
                             </goals>
+                            <configuration>
+                                <testFilesIncluded>
+                                    <jMeterTestFile>SIT.jmx</jMeterTestFile>
+                                    <jMeterTestFile>UAT.jmx</jMeterTestFile>
+                                </testFilesIncluded>
+                                <testResultsTimestamp>false</testResultsTimestamp>
+                                <appendResultsTimestamp>true</appendResultsTimestamp>
+                                <resultsFileNameDateFormat>MMMM, yyyy</resultsFileNameDateFormat>
+                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
             </plugins>
+        </pluginManagement>
     </build>
-   </project>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-gpg-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>sign-artifacts</id>
+                                    <phase>verify</phase>
+                                    <goals>
+                                        <goal>sign</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-javadoc-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>attach-javadocs</id>
+                                    <goals>
+                                        <goal>jar</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-source-plugin</artifactId>
+                            <version>2.1.2</version>
+                            <executions>
+                                <execution>
+                                    <id>attach-sources</id>
+                                    <goals>
+                                        <goal>jar-no-fork</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-release-plugin</artifactId>
+                            <version>2.3.1</version>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
+</project>
